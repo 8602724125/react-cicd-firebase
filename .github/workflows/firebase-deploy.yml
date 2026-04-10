@@ -1,4 +1,4 @@
-name: Firebase Hosting CI/CD
+name: Deploy React App to Firebase Hosting
 
 on:
   push:
@@ -6,33 +6,27 @@ on:
       - main
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Install Node.js
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Build project
-      - name: Build project
+      - name: Build React App
         run: npm run build
 
-      # 5. Deploy to Firebase
       - name: Deploy to Firebase Hosting
-        uses: :contentReference[oaicite:1]{index=1}@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_TOKEN }}
-          channelId: live
-          projectId: YOUR_FIREBASE_PROJECT_ID
+        uses: w9jds/firebase-action@v12.9.0
+        with:   # ✅ FIXED HERE
+          args: deploy --only hosting --project fir-47a53
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
